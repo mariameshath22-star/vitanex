@@ -1,0 +1,46 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "providers": {
+      "$category": {
+        ".read": true,
+        ".indexOn": ["status", "createdAt"],
+        "$providerId": {
+          ".write": "auth != null || newData.exists()"
+        }
+      }
+    },
+    "receivers": {
+      "$category": {
+        ".read": true,
+        ".indexOn": ["status", "createdAt"],
+        "$receiverId": {
+          ".write": "auth != null || newData.exists()"
+        }
+      }
+    },
+    "matches": {
+      ".read": true,
+      ".indexOn": ["status", "matchedAt", "category"],
+      "$matchId": {
+        ".write": "auth != null || newData.exists()"
+      }
+    },
+    "chats": {
+      "$matchId": {
+        ".read": true,
+        ".write": true,
+        "$messageId": {
+          ".validate": "newData.hasChildren(['matchId', 'text', 'senderName'])"
+        }
+      }
+    },
+    "notifications": {
+      ".read": true,
+      "$notificationId": {
+        ".write": true
+      }
+    }
+  }
+}

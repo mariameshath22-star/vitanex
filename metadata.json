@@ -1,0 +1,7 @@
+{
+  "name": "Vitanex Fusion",
+  "description": "A unified community support platform connecting service providers and receivers in real-time across Food, Agriculture, and Rural Social Services.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

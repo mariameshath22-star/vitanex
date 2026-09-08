@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Providers collection
+    match /providers/{providerId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'category', 'location'])
+                    && request.resource.data.name is string && request.resource.data.name.size() <= 100;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'fcmToken']);
+    }
+
+    // Receivers collection
+    match /receivers/{receiverId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'category', 'location'])
+                    && request.resource.data.name is string && request.resource.data.name.size() <= 100;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'fcmToken']);
+    }
+
+    // Matches collection
+    match /matches/{matchId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Chat messages subcollection
+    match /matches/{matchId}/messages/{messageId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['text', 'senderName'])
+                    && request.resource.data.text is string && request.resource.data.text.size() <= 2000;
+    }
+
+    // Notifications
+    match /notifications/{notificationId} {
+      allow read, write: if true;
+    }
+  }
+}
